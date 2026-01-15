@@ -16,8 +16,7 @@ export default function Admin() {
 
   // प्रोडक्ट्स लाना
   const fetchProducts = async () => {
-    const res = await axios.get(// ✅ Sahi Code:
-axios.get("https://akhilesh-kirana-store.onrender.com/api/products"));
+    const res = axios.get("https://akhilesh-kirana-store.onrender.com/api/products"));
     setProducts(res.data);
   };
 
@@ -41,13 +40,12 @@ axios.get("https://akhilesh-kirana-store.onrender.com/api/products"));
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(// ✅ Sahi Code:
-axios.post("https://akhilesh-kirana-store.onrender.com/api/products", product);
-      alert("✅ Product Added!");
+      await axios.post("https://akhilesh-kirana-store.onrender.com/api/products", product);
+      alert(" Product Added!");
       setProduct({ name: '', price: '', category: 'Grocery', image: '' });
       fetchProducts(); // लिस्ट अपडेट करो
     } catch (error) {
-      alert("❌ Error!");
+      alert(" Error!");
     }
   };
 
