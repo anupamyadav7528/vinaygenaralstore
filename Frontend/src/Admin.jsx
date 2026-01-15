@@ -102,9 +102,9 @@ axios.get("https://akhilesh-kirana-store.onrender.com/api/products")/${id}`);
 
       {/* PRODUCT LIST (DELETE SECTION) */}
       <div className="w-full max-w-2xl">
-          <h3 className="text-lg font-bold mb-4 text-gray-700">Dukan ka Saman ({products.length})</h3>
+          <h3 className="text-lg font-bold mb-4 text-gray-700">Dukan ka Saman ({products?.length})</h3>
           <div className="grid gap-3">
-              {products.map((p) => (
+              {products?.map((p) => (
                   <div key={p._id} className="bg-white p-3 rounded-lg shadow-sm flex justify-between items-center border border-gray-200">
                       <div className="flex items-center gap-3">
                           <img src={p.image} className="h-10 w-10 object-contain rounded" />
