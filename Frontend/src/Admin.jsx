@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Save, Lock, LogIn, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-export default function Admin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [password, setPassword] = useState("");
-  const [products, setProducts] = useState([]); // लिस्ट दिखाने के लिए
+const Admin = () => {
+  // 1. State banayein (Empty array [] ke sath taki crash na ho)
+  const [products, setProducts] = useState([]);
   
   const [product, setProduct] = useState({
     name: '',
@@ -14,110 +13,126 @@ export default function Admin() {
     image: ''
   });
 
-  // प्रोडक्ट्स लाना
-    const res = await axios.get("https://vinaygenaralstore.onrender.com/api/products");
-    setProducts(res.data);
-  };
-
+  // 2. Product List Laane ke liye (GET)
   useEffect(() => {
-    if(isLoggedIn) fetchProducts();
-  }, [isLoggedIn]);
+    const fetchProducts = async () => {
+      try {
+        // Yaha Render wala sahi link hai
+        const res = await axios.get("https://vinaygenaralstore.onrender.com/api/products");
+        setProducts(res.data);
+      } catch (error) {
+        console.log("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === "@akhilesh1947") {
-      setIsLoggedIn(true);
-    } else {
-      alert("❌ Galat Password!");
-    }
-  };
-
+  // 3. Input change handle karne ke liye
   const handleChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  // 4. Naya Product Add karne ke liye (POST)
+  const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
       await axios.post("https://vinaygenaralstore.onrender.com/api/products", product);
-      alert(" Product Added!");
-      setProduct({ name: '', price: '', category: 'Grocery', image: '' });
-      fetchProducts(); // लिस्ट अपडेट करो
+      alert("Product Added!");
+      setProduct({ name: '', price: '', category: 'Grocery', image: '' }); // Form saaf karein
+      window.location.reload(); // Page refresh karein taki naya saman dikhe
     } catch (error) {
-      alert(" Error!");
+      console.log(error);
+      alert("Error adding product");
     }
   };
 
-  // डिलीट फंक्शन 🗑️
+  // 5. Product Delete karne ke liye (DELETE)
   const handleDelete = async (id) => {
-    if(confirm("Pakka delete karna hai?")) {
-        try {
-            await axios.delete(`https://vinaygenaralstore.onrender.com/api/products/${id}`);
-            alert(" Product Deleted!");
-            fetchProducts(); // लिस्ट अपडेट करो
-        } catch (error) { 
-            alert("Delete nahi hua!");
-        }
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await axios.delete(`https://vinaygenaralstore.onrender.com/api/products/${id}`);
+        alert("Product Deleted!");
+        window.location.reload(); // List refresh karein
+      } catch (error) {
+        console.log(error);
+        alert("Error deleting product");
+      }
     }
   };
-
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm text-center">
-            <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="text-red-600" size={32} />
-            </div>
-            <h2 className="text-2xl font-bold mb-2 text-gray-800">Admin Login</h2>
-            <form onSubmit={handleLogin} className="space-y-4 mt-6">
-                <input type="password" placeholder="Password: Vinay123" className="w-full p-3 border rounded-lg text-center" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                <button className="w-full bg-black text-white py-3 rounded-lg font-bold">Login</button>
-            </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-10 flex flex-col items-center">
-      {/* FORM */}
-      <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md mb-8">
-        <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold flex items-center gap-2"><Plus/> Add Item</h2>
-            <button onClick={() => setIsLoggedIn(false)} className="text-red-500 text-sm font-bold">Logout</button>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input type="text" name="name" value={product.name} placeholder="Product Name" className="w-full p-2 border rounded" onChange={handleChange} required />
-          <div className="flex gap-2">
-            <input type="number" name="price" value={product.price} placeholder="Price" className="w-full p-2 border rounded" onChange={handleChange} required />
-            <select name="category" value={product.category} onChange={handleChange} className="w-full p-2 border rounded">
-                 <option>Grocery</option><option>Snacks</option><option>Oil</option><option>Personal Care</option>
+    <div className="min-h-screen bg-gray-100 p-5">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-blue-600">Admin Panel</h1>
+        <Link to="/" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+          Back to Shop
+        </Link>
+      </div>
+
+      {/* Product Add Form */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-8 max-w-2xl mx-auto">
+        <h2 className="text-xl font-bold mb-4">Add New Item</h2>
+        <form onSubmit={handleAddProduct} className="space-y-4">
+          <input 
+            type="text" name="name" placeholder="Item Name (e.g., Aata)" 
+            value={product.name} onChange={handleChange} 
+            className="w-full p-2 border rounded" required 
+          />
+          <div className="flex gap-4">
+            <input 
+              type="number" name="price" placeholder="Price (₹)" 
+              value={product.price} onChange={handleChange} 
+              className="w-full p-2 border rounded" required 
+            />
+            <select 
+              name="category" value={product.category} onChange={handleChange} 
+              className="w-full p-2 border rounded"
+            >
+              <option value="Grocery">Grocery</option>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Personal Care">Personal Care</option>
             </select>
           </div>
-          <input type="text" name="image" value={product.image} placeholder="Image URL" className="w-full p-2 border rounded" onChange={handleChange} required />
-          <button type="submit" className="w-full bg-green-600 text-white py-2 rounded font-bold flex justify-center gap-2"><Save size={18} /> Save</button>
+          <input 
+            type="text" name="image" placeholder="Image URL (Link)" 
+            value={product.image} onChange={handleChange} 
+            className="w-full p-2 border rounded" 
+          />
+          <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-bold">
+            Save Product
+          </button>
         </form>
       </div>
 
-      {/* PRODUCT LIST (DELETE SECTION) */}
-      <div className="w-full max-w-2xl">
-          <h3 className="text-lg font-bold mb-4 text-gray-700">Dukan ka Saman ({products?.length})</h3>
-          <div className="grid gap-3">
-              {products?.map((p) => (
-                  <div key={p._id} className="bg-white p-3 rounded-lg shadow-sm flex justify-between items-center border border-gray-200">
-                      <div className="flex items-center gap-3">
-                          <img src={p.image} className="h-10 w-10 object-contain rounded" />
-                          <div>
-                              <p className="font-bold text-gray-800">{p.name}</p>
-                              <p className="text-xs text-green-600 font-bold">₹{p.price} | {p.category}</p>
-                          </div>
-                      </div>
-                      <button onClick={() => handleDelete(p._id)} className="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-500 hover:text-white transition">
-                          <Trash2 size={18} />
-                      </button>
-                  </div>
-              ))}
+      {/* Product List */}
+      <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+        <h2 className="text-xl font-bold mb-4">Store Items ({products?.length})</h2>
+        
+        {products?.length === 0 ? (
+          <p className="text-gray-500 text-center">No items found. Add some products!</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {products?.map((item) => (
+              <div key={item._id} className="flex justify-between items-center border p-3 rounded hover:bg-gray-50">
+                <div>
+                  <h3 className="font-bold">{item.name}</h3>
+                  <p className="text-sm text-gray-600">₹{item.price} - {item.category}</p>
+                </div>
+                <button 
+                  onClick={() => handleDelete(item._id)} 
+                  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           </div>
+        )}
       </div>
     </div>
   );
+};
+
+export default Admin;
