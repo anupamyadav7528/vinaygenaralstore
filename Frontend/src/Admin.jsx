@@ -16,7 +16,7 @@ export default function Admin() {
 
   // प्रोडक्ट्स लाना
   const fetchProducts = async () => {
-    const res = axios.get("https://akhilesh-kirana-store.onrender.com/api/products"));
+    const res = axios.get("https://akhilesh-kirana-store.onrender.com/api/products");
     setProducts(res.data);
   };
 
