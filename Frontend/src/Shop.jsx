@@ -13,7 +13,7 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://akhilesh-kirana-store.onrender.com/api/products");
+        const response = await axios.get("https://vinaygenaralstore.onrender.com");
         setProducts(response.data);
       } catch (error) {
         console.error("Error:", error);

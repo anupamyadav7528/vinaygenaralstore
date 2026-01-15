@@ -15,8 +15,7 @@ export default function Admin() {
   });
 
   // प्रोडक्ट्स लाना
-  const fetchProducts = async () => {
-    const res = axios.get("https://akhilesh-kirana-store.onrender.com/api/products");
+    const res = await axios.get("https://vinaygenaralstore.onrender.com/api/products");
     setProducts(res.data);
   };
 
@@ -40,7 +39,7 @@ export default function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://akhilesh-kirana-store.onrender.com/api/products", product);
+      await axios.post("https://vinaygenaralstore.onrender.com/api/products", product);
       alert(" Product Added!");
       setProduct({ name: '', price: '', category: 'Grocery', image: '' });
       fetchProducts(); // लिस्ट अपडेट करो
@@ -53,8 +52,8 @@ export default function Admin() {
   const handleDelete = async (id) => {
     if(confirm("Pakka delete karna hai?")) {
         try {
-            await axios.delete(`// ✅ Sahi Code:
-axios.get("https://akhilesh-kirana-store.onrender.com/api/products")/${id}`);
+            await axios.delete(`https://vinaygenaralstore.onrender.com/api/products/${id}`);
+            alert(" Product Deleted!");
             fetchProducts(); // लिस्ट अपडेट करो
         } catch (error) { 
             alert("Delete nahi hua!");
@@ -122,4 +121,3 @@ axios.get("https://akhilesh-kirana-store.onrender.com/api/products")/${id}`);
       </div>
     </div>
   );
-}
