@@ -48,7 +48,7 @@ export default function Shop() {
     message += `💰 *Total Pay: ₹${finalTotal}*`;
 
     // 👇 यहाँ अपना नंबर लिखें (91 जरूर लगाएं)
-    window.open(`https://wa.me/916388443178?text=${message}`, "_blank");
+    window.open(`https://wa.me/9178oo616270?text=${message}`, "_blank");
   };
 
   // सर्च फिल्टर
