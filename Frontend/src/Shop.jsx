@@ -36,19 +36,27 @@ export default function Shop() {
   const deliveryCharge = isHomeDelivery ? 5 : 0;
   const finalTotal = itemsTotal + deliveryCharge;
 
-  // 3. WHATSAPP ORDER (अपना नंबर यहाँ बदलें)
+  // 3. WHATSAPP ORDER (Fixed Version)
   const placeOrder = () => {
     if (cart.length === 0) return alert("Cart khali hai!");
-    let message = `*🔥 New Order from Website!*%0A%0A`;
+
+    // Step 1: मैसेज तैयार करें (साधारण टेक्स्ट में)
+    let message = "*🔥 New Order from Website!*\n\n"; // \n का मतलब नई लाइन
     cart.forEach((item, i) => {
-      message += `${i + 1}. ${item.name} - ₹${item.price}%0A`;
+      message += `${i + 1}. ${item.name} - ₹${item.price}\n`;
     });
-    message += `%0A--------------------%0A`;
-    message += `🚚 Delivery: ${isHomeDelivery ? "Home Delivery (+₹5)" : "Self Pickup"}%0A`;
+    message += "\n--------------------\n";
+    message += `🚚 Delivery: ${isHomeDelivery ? "Home Delivery (+₹5)" : "Self Pickup"}\n`;
     message += `💰 *Total Pay: ₹${finalTotal}*`;
 
-    // 👇 यहाँ अपना नंबर लिखें (91 जरूर लगाएं)
-    window.open(`https://wa.me/9178oo616270?text=${message}`, "_blank");
+    // Step 2: लिंक बनाएं (encodeURIComponent का जादू)
+    let phoneNumber = "916388443178"; // अपना सही नंबर यहाँ चेक करें
+    
+    // यह लिंक स्पेस और सिंबल को सही कर देगा
+    let url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+    // Step 3: WhatsApp खोलें
+    window.open(url, "_blank");
   };
 
   // सर्च फिल्टर
