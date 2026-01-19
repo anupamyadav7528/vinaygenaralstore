@@ -50,7 +50,7 @@ export default function Shop() {
     message += `💰 *Total Pay: ₹${finalTotal}*`;
 
     // Step 2: लिंक बनाएं (encodeURIComponent का जादू)
-    let phoneNumber = "916388443178"; // अपना सही नंबर यहाँ चेक करें
+    let phoneNumber = "917800616270"; // अपना सही नंबर यहाँ चेक करें
     
     // यह लिंक स्पेस और सिंबल को सही कर देगा
     let url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
